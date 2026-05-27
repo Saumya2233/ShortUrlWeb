@@ -7,14 +7,36 @@ export default function Home() {
   const [shortUrl, setShortUrl] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [recentUrls, setRecentUrls] = useState([]);
 
-  // Load saved URLs from localStorage
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("recentUrls")) || [];
+  async function fetchRecentUrls() {
+    const res = await fetch("/api/urls?limit=5", {
+      cache: "no-store",
+    });
 
-    setRecentUrls(saved);
+    if (!res.ok) {
+      throw new Error("Failed to load recent URLs");
+    }
+
+    const data = await res.json();
+    setRecentUrls(data);
+  }
+
+  useEffect(() => {
+    fetch("/api/urls?limit=5", {
+      cache: "no-store",
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to load recent URLs");
+        }
+
+        return res.json();
+      })
+      .then(setRecentUrls)
+      .catch(() => {
+        setError("Could not load recent URLs");
+      });
   }, []);
 
   async function handleSubmit(e) {
@@ -42,14 +64,7 @@ export default function Home() {
       }
 
       setShortUrl(data.shortUrl);
-
-      // Create updated recent list
-      const updatedUrls = [data.shortUrl, ...recentUrls].slice(0, 5);
-
-      setRecentUrls(updatedUrls);
-
-      localStorage.setItem("recentUrls", JSON.stringify(updatedUrls));
-
+      await fetchRecentUrls();
       setUrl("");
     } catch {
       setError("Something went wrong");
@@ -105,18 +120,18 @@ export default function Home() {
 
         {recentUrls.length > 0 && (
           <div className="border border-gray-300 rounded-xl p-4">
-            <h2 className="font-semibold mb-3">Recent URLs</h2>
+            <h2 className="font-semibold mb-3">Recently Generated URLs</h2>
 
             <ul className="space-y-2 list-disc pl-5">
               {recentUrls.map((item, index) => (
-                <li key={index}>
+                <li key={item.code ?? index}>
                   <a
-                    href={item}
+                    href={`/${item.code}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 underline break-all"
                   >
-                    {item}
+                    {`/${item.code}`}
                   </a>
                 </li>
               ))}

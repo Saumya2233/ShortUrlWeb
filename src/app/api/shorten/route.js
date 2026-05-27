@@ -20,13 +20,14 @@ export async function POST(req) {
       return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
     }
 
-    // Read existing URLs
     const urls = readUrls();
 
-    // Generate short code
-    const code = generateCode();
+    let code = generateCode();
 
-    // Create new object
+    while (urls.some((item) => item.code === code)) {
+      code = generateCode();
+    }
+
     const newUrl = {
       code,
       originalUrl: url,
@@ -39,9 +40,12 @@ export async function POST(req) {
     // Save in JSON file
     saveUrls(urls);
 
-    // Return short URL
+    const origin = new URL(req.url).origin;
+
     return NextResponse.json({
-      shortUrl: `http://localhost:3000/${code}`,
+      code,
+      originalUrl: url,
+      shortUrl: `${origin}/${code}`,
     });
   } catch (error) {
     return NextResponse.json(

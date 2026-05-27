@@ -12,11 +12,9 @@ export default async function RedirectPage({ params }) {
   // Find matching code
   const url = urls.find((item) => item.code === code);
 
-  // If code not found
-  if (!url) {
+  if (!url?.originalUrl) {
     notFound();
   }
 
-  // Redirect to original URL
   redirect(url.originalUrl);
 }
