@@ -1,36 +1,156 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Mini URL Shortener
 
-## Getting Started
+A simple full-stack URL shortener built with Next.js.
 
-First, run the development server:
+Users can paste a long URL and receive a shortened link that redirects to the original URL.
+
+---
+
+# Tech Stack
+
+- Next.js (App Router)
+- React
+- Tailwind CSS
+- File-based JSON storage
+
+---
+
+# Why I Chose This Stack
+
+I chose Next.js because it allowed me to build both the frontend and backend quickly in a single project, which matched the assignment’s focus on shipping fast and keeping the architecture simple.
+
+---
+
+# Features
+
+## Core Features
+
+- Shorten long URLs
+- Redirect short URLs to original links
+- Persistent storage using a JSON file
+- Error handling for:
+  - Empty input
+  - Invalid URLs
+  - Missing short codes
+
+## Optional Feature
+
+- Recently shortened URLs (last 5 stored in localStorage)
+
+---
+
+# Folder Structure
+
+```txt
+src/app
+├── api/shorten
+├── [code]
+└── page.js
+```
+
+---
+
+# Setup Instructions
+
+## Clone the repository
+
+```bash
+git clone YOUR_GITHUB_REPO_LINK
+```
+
+## Navigate into the project
+
+```bash
+cd urlshorten
+```
+
+## Install dependencies
+
+```bash
+npm install
+```
+
+## Start development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Open in browser
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```txt
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# API Routes
 
-To learn more about Next.js, take a look at the following resources:
+## Create Short URL
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```txt
+POST /api/shorten
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Request Body
 
-## Deploy on Vercel
+```json
+{
+  "url": "https://google.com"
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Redirect Route
+
+```txt
+GET /:code
+```
+
+### Example
+
+```txt
+http://localhost:3000/abc123
+```
+
+Redirects the user to the original URL.
+
+---
+
+# Edge Cases Handled
+
+- Empty URL input
+- Invalid URL format
+- Missing short code
+- Persistent storage after restart
+
+---
+
+# AI Usage
+
+AI tools were used during development for:
+
+- debugging issues
+- route structure suggestions
+- URL validation suggestions
+- debugging redirect functionality
+- fixing Next.js dynamic route issues
+
+More details are available in `AI_LOG.md`.
+
+---
+
+# What I'd Do With Another 4 Hours
+
+- Add click analytics for shortened URLs
+- Improve accessibility and mobile responsiveness
+- Add automated testing
+- Deploy the application on Vercel
+- Add custom short URL support
+
+---
+
+# Notes
+
+This project was completed within the assignment’s recommended time budget and intentionally kept simple instead of over-engineered.
